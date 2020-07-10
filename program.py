@@ -2,7 +2,17 @@ import os
 from os import listdir
 from os.path import isfile, join
 import json
-from json import JSONEncoder
+
+from context import Context
+from context import ContextEncoder
+from context import Address
+from context import Client
+from context import Employee
+from context import SuperAdministrator
+from context import SystemAdministrator
+from context import Advisor
+
+from validation import validateUsername
 
 global user, securityClearance
 
@@ -10,72 +20,8 @@ def enum(**enums):
     return type('Enum', (), enums)
 
 SecurityClearance = enum(ONE="SuperAdministrator",TWO="SystemAdministrator", THREE="Advisor")
-
-
-class Context :
-    def __init__(self):
-        self.Employees = {
-            "SuperAdministrators" : [],
-            "SystemAdministrators" : [],
-            "Advisors" : []
-        }
-        self.Customers = []
-        self.Path = "./data/context.json"
-
-    #Read Employees from json file
-    def ReadEmployees(self):
-        with open(self.Path) as f:
-            if os.stat(self.Path).st_size != 0:
-                d = json.load(f)
-                self.Employees["SuperAdministrators"] = d["Employees"]["SuperAdministrators"]
-                self.Employees["SystemAdministrators"] = d["Employees"]["SystemAdministrators"]
-                self.Employees["Advisors"] = d["Employees"]["Advisors"]
-
-    def ReadClients(self):
-        with open(self.Path) as f:
-            d = json.load(f)
-            self.Clients = d.Clients
-            print(d)
-
-    def writeData(self):
-        with open(self.Path, 'w', encoding='utf-8') as f:
-            data = json.dumps(self, indent=4, cls=ContextEncoder)
-            f.write(data)
-
-class ContextEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
-
-class Employee : 
-    def __init__(self, Username, Password):
-        self.Username = Username
-        self.Password = Password
-
-    def AddClient(self, fullname, address, email, phone):
-        
-
-class SystemAdministrator(Employee):
-    def __init__(self, Username, Password):
-        super().__init__(Username, Password)
-
-    #Adding a new user should only be possible by the SuperAdministrator
-    def AddNewAdvisor (self, context, employee):
-        context.Employees["Advisors"].append(employee)
-        context.writeData()
-
-class SuperAdministrator(SystemAdministrator):
-    def __init__(self, Username, Password):
-        super().__init__(Username, Password)
-
-    def AddNewSystemAdministrator(self, context, employee):
-        context.Employees["SystemAdministrators"].append(employee)
-        context.writeData()
-
-class Advisor(Employee):
-    def __init__(self, Username, Password):
-        super().__init__(Username, Password)
-
-
+Cities = enum(ONE= "Rotterdam", TWO="Amsterdam", THREE="Utrecht", FOUR="Breda", FIVE="Delft",
+                SIX="Leiden", SEVEN="Arnhem", EIGHT="Eindhoven", NINE="Nijmegen", TEN="Tilburg" )
 
 
 def checkUsernameExists(context, username):
@@ -122,13 +68,6 @@ def login(context):
     else:
         print("this username does not exist. Please check your spelling and try again.")
         login(context)
-
-def validateUsername(username):
-    if username.count >= 5 and username.count <= 20:
-        #TODO: insert other if statements validating the username
-        print("valid username")
-    else:
-        print("The username should have a length between 5 and 20 characters.")
 
 def showMenu(context):
     global securityClearance,SecurityClearance
