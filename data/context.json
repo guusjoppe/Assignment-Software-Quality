@@ -1,0 +1,28 @@
+{
+    "Employees": {
+        "SuperAdministrators": [
+            {
+                "Username": "GuusJoppe",
+                "Password": "Testje"
+            }
+        ],
+        "SystemAdministrators": [
+            {
+                "Username": "LaurensMaas",
+                "Password": "Testje2"
+            },
+            {
+                "Username": "JohnDoe",
+                "Password": "Appelflap"
+            }
+        ],
+        "Advisors": [
+            {
+                "Username": "Bobage",
+                "Password": "algoritms"
+            }
+        ]
+    },
+    "Customers": [],
+    "Path": "./data/context.json"
+}
