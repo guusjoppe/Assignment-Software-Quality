@@ -2,6 +2,8 @@ import os
 import json
 from json import JSONEncoder
 
+from forms import Form
+
 class Context :
     def __init__(self):
         self.Employees = {
@@ -60,6 +62,20 @@ class Employee :
         client = Client(fullname, address, email, phone)
         context.Clients.append(client)
         context.writeData()
+
+    def OpenMenu(self, form):
+        print("1 --- Add new Client")
+        print("2 --- Log out")
+        print("exit --- Exit this program")
+        option = input("What do you want to do? (1)")
+        if option == "1":
+            form.newClientForm()
+        elif option == "2":
+            form.logOut()
+        elif option == "exit":
+            exit()
+        else:
+            self.OpenMenu(form)
 
 
 class SystemAdministrator(Employee):

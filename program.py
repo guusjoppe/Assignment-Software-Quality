@@ -12,7 +12,7 @@ from context import SuperAdministrator
 from context import SystemAdministrator
 from context import Advisor
 
-from validation import validateUsername
+from forms import Form
 
 global user, securityClearance
 
@@ -20,8 +20,8 @@ def enum(**enums):
     return type('Enum', (), enums)
 
 SecurityClearance = enum(ONE="SuperAdministrator",TWO="SystemAdministrator", THREE="Advisor")
-Cities = enum(ONE= "Rotterdam", TWO="Amsterdam", THREE="Utrecht", FOUR="Breda", FIVE="Delft",
-                SIX="Leiden", SEVEN="Arnhem", EIGHT="Eindhoven", NINE="Nijmegen", TEN="Tilburg" )
+Cities = ["Rotterdam","Amsterdam","Utrecht","Breda","Delft",
+                "Leiden","Arnhem", "Eindhoven","Nijmegen","Tilburg"]
 
 
 def checkUsernameExists(context, username):
@@ -62,6 +62,7 @@ def login(context):
             correctPassword = checkPassword(password)
             cnt = cnt + 1
         if correctPassword:
+            print("Logging in...")
             return True
         else:
             exit            
@@ -69,17 +70,9 @@ def login(context):
         print("this username does not exist. Please check your spelling and try again.")
         login(context)
 
-def showMenu(context):
-    global securityClearance,SecurityClearance
-    if securityClearance == SecurityClearance.ONE:
-        print("SuperAdministrators menu")
-        #TODO: implement SuperAdministrators menu
-    elif securityClearance == SecurityClearance.TWO:
-        print("SystemAdministrators menu")
-        #TODO: implement SystemAdministrators menu
-    else:
-        print("Advisors menu")
-        #TODO: implement Advisors menu
+def showMenu(context , employee):
+    form = Form()
+    employee.OpenMenu(form)
 
 def main():
     context = Context()
@@ -89,7 +82,7 @@ def main():
     if login(context):
         print("You have succesfully logged in.")
         print("Your securityLevel is ", securityClearance)
-        showMenu(context)
+        showMenu(context, user)
 
 def init(context):
     sa = SuperAdministrator("GuusJoppe", "Testje")
